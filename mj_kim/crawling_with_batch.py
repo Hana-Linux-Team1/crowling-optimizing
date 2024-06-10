@@ -10,6 +10,7 @@ start_time = time.time()
 # 파일명 설정
 csv_file = 'daangn_articles3.csv'
 
+
 async def fetch_article_data(session, article_id):
     url = f"https://www.daangn.com/articles/{article_id}"
     headers = {"User-Agent": "Mozilla/5.0"}
