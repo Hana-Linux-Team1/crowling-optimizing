@@ -8,6 +8,7 @@ from multiprocessing import Process
 # 프로세스 수
 MAX_PROCESSES = 3
 
+
 def capture_webpage(url, output_dir):
     # 출력 디렉토리가 없으면 생성
     if not os.path.exists(output_dir):
@@ -47,7 +48,6 @@ def consumer_task():
 def manage_consumers():
     # 프로세스 관리 리스트
     processes = []
-    start_time = time.time()
 
     while True:
 
@@ -69,10 +69,10 @@ def manage_consumers():
                     print(f'Terminated process {p.pid}')
         time.sleep(1)
 
-    # 모든 프로세스가 종료될 때까지 대기
-    for p in processes:
-        p.join()
-        print(f'Joined process {p.pid}')
+    # # 모든 프로세스가 종료될 때까지 대기
+    # for p in processes:
+    #     p.join()
+    #     print(f'Joined process {p.pid}')
 
 
 if __name__ == '__main__':
