@@ -3,6 +3,7 @@ import json
 import subprocess
 import os
 import hashlib
+import sys
 
 def capture_webpage(url, output_dir):
     # 출력 디렉토리가 없으면 생성
@@ -46,6 +47,7 @@ def consumer_task():
             # URL을 이용한 크롤링 작업
             # argument로 URL을 전달하고, 출력 파일을 저장할 디렉토리를 지정
             capture_webpage(url, 'screenshots')
+            sys.exit(0)
 
 
 if __name__ == '__main__':
