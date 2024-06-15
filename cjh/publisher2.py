@@ -4,9 +4,30 @@ import time
 from multiprocessing import Process
 import argparse
 import sys
+import os
+import shutil
+import datetime
+
+
+def archive_screenshots(output_dir):
+    # 현재 날짜와 시간 정보를 기반으로 타임스탬프 생성
+    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    # 압축 파일 이름 설정
+    archive_name = f"{output_dir}_{timestamp}.zip"
+
+    # screenshots 폴더를 압축
+    shutil.make_archive(archive_name.replace('.zip', ''), 'zip', output_dir)
+    print(f"Archived {output_dir} to {archive_name}")
 
 
 def initialize_redis_queue():
+    # screenshots 폴더가 이미 존재하면 아카이빙
+    output_dir = 'screenshots'
+    if os.path.exists(output_dir):
+        archive_screenshots(output_dir)
+        # 기존 폴더 삭제
+        shutil.rmtree(output_dir)
+
     # Redis 서버에 연결
     r = redis.Redis()
     # carrot_tasks 큐를 비우기
