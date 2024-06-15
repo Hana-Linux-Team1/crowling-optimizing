@@ -94,15 +94,15 @@ if __name__ == '__main__':
 
     # 최대 소비자 프로세스 수를 명령줄에서 입력받음. 기본값은 3.
     parser.add_argument('--max_processes', type=int, default=3,
-                        help='Maximum number of consumer processes to run')
+                        help='Maximum number of consumer processes to run. Default is 3.')
 
     # 스크래핑을 시작할 게시글의 시작 인덱스 번호를 명령줄에서 입력받음. 기본값은 783227594.
     parser.add_argument('--index', type=int, default=783227594,
-                        help='Starting index number for the articles')
+                        help='Starting index number for the articles. Default is 783227594.')
 
     # 스크래핑할 게시글의 수를 명령줄에서 입력받음. 기본값은 100.
     parser.add_argument('--count', type=int, default=100,
-                        help='Number of articles to scrape')
+                        help='Number of articles to scrape. Default is 100.')
 
     # 입력된 인자들을 파싱하여 args 객체로 만듦
     args = parser.parse_args()
