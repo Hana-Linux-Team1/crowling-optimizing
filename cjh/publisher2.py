@@ -5,6 +5,7 @@ from multiprocessing import Process
 import argparse
 import sys
 
+
 def initialize_redis_queue():
     # Redis 서버에 연결
     r = redis.Redis()
@@ -33,20 +34,26 @@ def manage_consumers(max_processes):
     try:
         while True:
             current_length = r.llen('carrot_tasks')  # 레디스 큐의 길이를 계속 갱신
+
+            # 종료된 프로세스 청소
+            processes = [p for p in processes if p.is_alive()]
+
+            # 모든 프로세스가 종료되었고, 더 이상 처리할 작업이 없을 때 종료
+            if len(processes) == 0 and current_length == 0:
+                break
+
             print(f'Current Queue length: {current_length}')
+            print(f'Current processes: {len(processes)}')
+
+            for p in processes:
+                print(f'Process {p.pid} is alive: {p.is_alive()}')
+
             # 새로운 프로세스 시작 조건
             while len(processes) < max_processes and current_length > 0:
                 p = Process(target=consumer_task)
                 p.start()
                 processes.append(p)
                 print(f'Started process {p.pid}')
-                
-            # 종료된 프로세스 청소
-            processes = [p for p in processes if p.is_alive()]
-
-            # 모든 프로세스가 종료되었고, 더 이상 처리할 작업이 없을 때 종료
-            if current_length == 0:
-                break
 
             time.sleep(1)  # CPU 사용률을 관리하기 위한 간단한 딜레이
         # for p in processes:
@@ -58,6 +65,7 @@ def manage_consumers(max_processes):
                 p.terminate()
             p.join()
         processes = []
+
 
 if __name__ == '__main__':
     # argparse 라이브러리를 사용하여 명령줄 인터페이스 구성
@@ -102,7 +110,7 @@ if __name__ == '__main__':
     producer_task(urls_to_scrape)
 
     # 소비자 프로세스 관리 시작
-    manage_consumers(max_processes)      
+    manage_consumers(max_processes)
 
     # 모든 작업이 Redis 큐에 추가되고 소비자 프로세스 관리가 완료된 후 메시지 출력
     time.sleep(1.5)

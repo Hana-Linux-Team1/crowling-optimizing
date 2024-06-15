@@ -5,6 +5,7 @@ import os
 import hashlib
 import sys
 
+
 def capture_webpage(url, output_dir):
     # 출력 디렉토리가 없으면 생성
     if not os.path.exists(output_dir):
@@ -38,7 +39,7 @@ def consumer_task():
     r = redis.Redis()
     while True:
         # 블로킹 방식으로 메시지를 가져옴
-        task = r.brpop('carrot_tasks')
+        task = r.brpop('carrot_tasks', 1)
         if task:
             # 메시지를 JSON 형식으로 변환한 후 URL을 추출
             task_data = json.loads(task[1])
@@ -48,6 +49,8 @@ def consumer_task():
             # argument로 URL을 전달하고, 출력 파일을 저장할 디렉토리를 지정
             capture_webpage(url, 'screenshots')
             sys.exit(0)
+        else:
+            break
 
 
 if __name__ == '__main__':
